@@ -1,95 +1,67 @@
 package com.hometask.module9.cesarcode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class EnglishCesar {
 
-    private final static List<Character> alphabet = new ArrayList<>();
-    private final static int n = 26;
-    private int key;
+    private final static List<Character> ALPHABET = new ArrayList<>();
+    private final static int ALPHABET_SIZE = 26;
+    private final static int[] CONTROL_TYPE = {0, 1};
+    private final int key;
+    private String text;
+
+    public EnglishCesar(String text, int key) {
+        this.text = text;
+        this.key = key;
+    }
+
     static {
         for (char c = 'A'; c <= 'Z'; c++) {
-            alphabet.add(c);
+            ALPHABET.add(c);
+            Collections.unmodifiableList(ALPHABET);
         }
     }
-
-    public String getAfterEncrypt() {
-        return afterEncrypt;
-    }
-
-    public String getAfterDecrypt() {
-        return afterDecrypt;
-    }
-
-    private String afterEncrypt;
-    private String afterDecrypt;
-
-    public int getKey() {
-        return key;
-    }
-
 
     @Override
     public String toString() {
         return "EnglishCesar{" +
-                "alphabet=" + alphabet +
+                "ALPHABET=" + ALPHABET +
                 '}';
     }
 
-    public static int findInEnglish(char c) {
-        int rez = -1;
-
-        for (int i = 0; i < alphabet.size(); ++i) {
-            if (Character.toUpperCase(c) == alphabet.get(i))
-                rez = i;
-        }
-        return rez;
-    }
-
-    public static boolean isEnglish(char c) {
-        int i = (int) c;
-        if (((i >= 65 && i <= 90) || (i >= 96 && i <= 122))) return true;
-        else {
-            return false;
-        }
-    }
-
-    public void toEncrypt(String text, int key) {
+    void toCrypt(int type) {
         StringBuilder output = new StringBuilder();
-        this.key = key;
         for (int i = 0; i < text.length(); ++i) {
             char c = text.charAt(i);
-            int y = (findInEnglish(c) + key) % n;
+            int index = ALPHABET.indexOf(Character.toUpperCase(c));
+            int newIndex = (index + key) % ALPHABET_SIZE;
+            switch (type) {
+                case 0:
+                    newIndex = (index + key) % ALPHABET_SIZE;
+                    break;
+                case 1:
+                    newIndex = ((index - key + ALPHABET_SIZE) % ALPHABET_SIZE);
+            }
 
             if (Character.isUpperCase(c)) {
-                output.append(alphabet.get(y));
-
-            } else if ((!isEnglish(c))) {
+                output.append(ALPHABET.get(newIndex));
+            } else if ((!Character.isAlphabetic(c))) {
                 output.append(c);
             } else {
-                output.append(Character.toLowerCase(alphabet.get(y)));
+                output.append(Character.toLowerCase(ALPHABET.get(newIndex)));
             }
         }
-        afterEncrypt = output.toString();
+        System.out.println(text = output.toString());
+    }
+
+    public void toEncrypt() {
+        toCrypt(CONTROL_TYPE[0]);
     }
 
     public void toDecrypt() {
-        StringBuilder output = new StringBuilder();
-
-        for (int i = 0; i < afterEncrypt.length(); ++i) {
-            char c = afterEncrypt.charAt(i);
-
-            int x = ((findInEnglish(c) - key + n) % n);
-            if (Character.isUpperCase(c)) {
-                output.append(alphabet.get(x));
-            } else if (!isEnglish(c)) {
-                output.append(c);
-            } else {
-                output.append(Character.toLowerCase(alphabet.get(x)));
-            }
-        }
-
-        afterDecrypt = output.toString();
+        toCrypt(CONTROL_TYPE[1]);
     }
 }
+

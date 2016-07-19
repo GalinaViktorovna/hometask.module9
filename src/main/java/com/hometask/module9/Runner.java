@@ -5,6 +5,7 @@ import com.hometask.module9.files.AudioFile;
 import com.hometask.module9.files.ImageFile;
 import com.hometask.module9.files.TextFile;
 
+
 public class Runner {
 
 
@@ -18,11 +19,10 @@ public class Runner {
         myDirectory.addFileToDirectory(imageFile);
         myDirectory.printFilesOnDirectory(myDirectory.getFiles());
         System.out.println(myDirectory.getFiles().toString());
-        EnglishCesar englishCesar = new EnglishCesar();
-        englishCesar.toEncrypt(myDirectory.getFiles().toString(), 5);
-        System.out.println(englishCesar.getAfterEncrypt());
+        EnglishCesar englishCesar = new EnglishCesar(myDirectory.getFiles().toString(), 5);
+        englishCesar.toEncrypt();
         englishCesar.toDecrypt();
-        System.out.println(englishCesar.getAfterDecrypt());
+
 
 
     }
