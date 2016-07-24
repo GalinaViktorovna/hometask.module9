@@ -6,9 +6,8 @@ import java.util.List;
 
 public class EnglishCesar {
 
-    private final static List<Character> ALPHABET = new ArrayList<>();
+    private final static List<Character> ALPHABET;
     private final static int ALPHABET_SIZE = 26;
-    private final static int[] CONTROL_TYPE = {0, 1};
     private final int key;
     private String text;
 
@@ -18,10 +17,11 @@ public class EnglishCesar {
     }
 
     static {
+        List<Character> list = new ArrayList<>();
         for (char c = 'A'; c <= 'Z'; c++) {
-            ALPHABET.add(c);
-            Collections.unmodifiableList(ALPHABET);
+            list.add(c);
         }
+        ALPHABET = Collections.unmodifiableList(list);
     }
 
     @Override
@@ -31,17 +31,18 @@ public class EnglishCesar {
                 '}';
     }
 
-    void toCrypt(int type) {
+    void toCrypt(CipherType type) {
         StringBuilder output = new StringBuilder();
         for (int i = 0; i < text.length(); ++i) {
             char c = text.charAt(i);
             int index = ALPHABET.indexOf(Character.toUpperCase(c));
             int newIndex = (index + key) % ALPHABET_SIZE;
+
             switch (type) {
-                case 0:
+                case ENCRYPT:
                     newIndex = (index + key) % ALPHABET_SIZE;
                     break;
-                case 1:
+                case DECRYPT:
                     newIndex = ((index - key + ALPHABET_SIZE) % ALPHABET_SIZE);
             }
 
@@ -55,13 +56,11 @@ public class EnglishCesar {
         }
         System.out.println(text = output.toString());
     }
-
     public void toEncrypt() {
-        toCrypt(CONTROL_TYPE[0]);
+        toCrypt(CipherType.ENCRYPT);
     }
-
     public void toDecrypt() {
-        toCrypt(CONTROL_TYPE[1]);
+        toCrypt(CipherType.DECRYPT);
     }
 }
 
